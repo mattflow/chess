@@ -3,10 +3,16 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 import { spawn } from "child_process";
+import path from "path";
+import { promises as fs } from "fs";
 
 const getBestMove = () => {
   return new Promise<string>((resolve) => {
-    const stockfish = spawn("vendor/Stockfish/src/stockfish");
+    const stockfishPath = path.join(
+      process.cwd(),
+      "vendor/Stockfish/src/stockfish"
+    );
+    const stockfish = spawn(stockfishPath);
     stockfish.stdout.on("data", (data: Buffer) => {
       console.log(data.toString());
       stockfish.stdin.write("quit\n");
